@@ -4,8 +4,8 @@ class Integer
 {
 public:
 	Integer();
-	Integer(unsigned units);
-	//Integer(int num);
+	Integer(unsigned units, bool sign);
+	Integer(int num);
 
 	//void SetSign(bool sign);
 	//bool GetSign()const;
@@ -38,6 +38,12 @@ public:
 	Integer operator-(const Integer& other)
 	{
 		return Subtract(other);
+	}
+
+
+	Integer operator*(const Integer& other)
+	{
+		return Multiply(other);
 	}
 
 	Integer operator--(void)
@@ -76,26 +82,60 @@ Integer::Integer()
 	sign_ = 0;
 }
 
-Integer::Integer(unsigned units)
+Integer::Integer(unsigned units, bool sign)
 {
 	units_ = units;
-	sign_ = 0;
+	sign_ = sign;
+}
+
+//Integer::Integer(unsigned units)
+//{
+//	units_ = units;
+//	sign_ = 0;
+//}
+
+Integer::Integer(int num)
+{
+	if (num > 0)
+	{
+		sign_ = 1;
+	}
+	else
+	{
+		sign_ = 0;
+	}
 }
 
 
 int main()
 {
 	Integer val1{ 10 };
-	Integer val2{ 9 };
+	Integer val2{ -9 };
 	Integer res;
 	res = val1 + val2;
 	std::cout << res.GetUnits() << "\n";
 	res = val1 - val2;
 	std::cout << res.GetUnits() << "\n";
+	res = val1 * val2;
+	std::cout << res.GetUnits() << "\n";
 }
 
 Integer Integer::Summ(const Integer& other) const
 {
+	unsigned res;
+	if (other.sign_)
+	{
+		res = this->units_ - other.units_;
+		return Integer(res, 0);
+	}
+	else if (this->sign_)
+	{
+		res = other.units_ - this->units_;
+	}
+	else if (other.sign_ && this->sign_)
+	{
+
+	}
 	return Integer(this->units_ + other.units_);
 }
 
@@ -106,8 +146,15 @@ Integer Integer::Subtract(const Integer& other) const
 
 Integer Integer::Multiply(const Integer& other) const
 {
+	unsigned res = 0;
 
-	return Integer();
+	for (size_t i = 0; i < other.GetUnits(); i++)
+	{
+		res += this->units_;
+	}
+
+
+	return Integer(res);
 }
 
 unsigned Integer::GetUnits() const
